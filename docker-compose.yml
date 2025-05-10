@@ -8,3 +8,9 @@ services:
       NODE_ENV: production
     ports:
       - 8998:80
+    networks:
+      - news-network
+
+networks:
+  news-network:
+    driver: bridge
