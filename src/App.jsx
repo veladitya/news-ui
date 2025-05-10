@@ -49,7 +49,7 @@ const App = () => {
     const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
-        fetch(`http://localhost:8080/api/v1/news?page=${currentPage - 1}&size=5`)
+        fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:8080'}/api/v1/news?page=${currentPage - 1}&size=5`)
             .then((res) => res.json())
             .then((data) => {
                 setArticles(data?.content || []);
