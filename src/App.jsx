@@ -32,19 +32,40 @@ const Header = ({ toggleLanguage }) => {
     );
 };
 
+const Pagination = ({ currentPage, totalPages, onPageChange }) => {
+    return (
+        <div className="pagination flex justify-center items-center gap-2 mt-6 mb-4">
+            <button onClick={() => onPageChange(currentPage - 1)} disabled={currentPage === 1} className="btn">Previous</button>
+            <span>Page {currentPage} of {totalPages}</span>
+            <button onClick={() => onPageChange(currentPage + 1)} disabled={currentPage === totalPages} className="btn">Next</button>
+        </div>
+    );
+};
+
 const App = () => {
     const [language, setLanguage] = useState('ENG');
     const [articles, setArticles] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
 
     useEffect(() => {
-        fetch('http://localhost:8080/api/v1/news')
+        fetch(`http://localhost:8080/api/v1/news?page=${currentPage - 1}&size=5`)
             .then((res) => res.json())
-            .then((data) => setArticles(data?.content || []))
+            .then((data) => {
+                setArticles(data?.content || []);
+                setTotalPages(data.totalPages || 1);
+            })
             .catch(() => setArticles([]));
-    }, []);
+    }, [currentPage]);
 
     const toggleLanguage = (lang) => {
         setLanguage(lang);
+    };
+
+    const handlePageChange = (page) => {
+        if (page > 0 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     return (
@@ -55,6 +76,7 @@ const App = () => {
                     <NewsCard key={index} article={article} />
                 ))}
             </div>
+            <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={handlePageChange} />
         </div>
     );
 };
