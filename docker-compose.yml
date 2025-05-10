@@ -1,0 +1,10 @@
+services:
+  news-ui:
+    image: new-ui
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      NODE_ENV: production
+    ports:
+      - 8998:80
